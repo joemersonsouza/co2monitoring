@@ -1,0 +1,28 @@
+#SPRING CONFIGURATION
+spring:
+  sql:
+    init:
+      mode: never
+  datasource:
+    url: jdbc:h2:mem:test
+    username: sa
+    password:
+    driverClassName: org.h2.Driver
+  jpa:
+    database: h2
+    show-sql: true
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        default_schema: co2database
+        connection:
+          url: jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;DATABASE_TO_UPPER=false;INIT=CREATE SCHEMA IF NOT EXISTS co2database;NON_KEYWORDS=VALUE
+      username: sa
+      password:
+    defer-datasource-initialization: true
+  jackson:
+    serialization:
+      write-dates-as-timestamps: true
+  flyway:
+    enabled: false

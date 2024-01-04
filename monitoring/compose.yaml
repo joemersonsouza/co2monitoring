@@ -1,0 +1,35 @@
+version: '3.9'
+
+services:
+  co2monitoringapp:
+    container_name: co2monitoringapp
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        DB_URL: ${DB_URL}
+        PG_USER: ${PG_USER}
+        PG_PASSWORD: ${PG_PASSWORD}
+    ports:
+      - "8080:8080"
+    environment: # these are the environment variables that are passed to the dockerfile
+      DB_URL: jdbc:postgresql://db:5432/postgres
+      PG_USER: postgres
+      PG_PASSWORD: postgres
+    depends_on:
+      - rabbitmq
+      - db
+  rabbitmq:
+    image: "rabbitmq:3-management"
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+  db:
+    container_name: db
+    image: postgres:14.1-alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    ports:
+      - "5432:5432"
