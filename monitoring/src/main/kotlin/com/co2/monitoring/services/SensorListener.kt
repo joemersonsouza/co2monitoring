@@ -34,7 +34,7 @@ class SensorListener(
         val sensorMessage = mapper.readValue(body, SensorMessage::class.java)
         try {
             handleSensorMessage(sensorMessage)
-        } catch(exception: Exception) {
+        } catch (exception: Exception) {
             logger.error("The message $message was not processed. Error: ${exception.message}")
         }
     }
@@ -70,8 +70,9 @@ class SensorListener(
         val measurementValues = measurements.map { it.value }
         if (!metrics.isPresent) {
             metricsService.saveMetrics(sensor, measurementValues)
-        } else if (metrics.get().maxMeasurerLast30Days < message.co2) {
-            metricsService.updateMetrics(metrics.get(), message.co2)
+        } else {
+            val maximumValue = if (metrics.get().maxMeasurerLast30Days < message.co2) message.co2 else metrics.get().maxMeasurerLast30Days
+            metricsService.updateMetrics(metrics.get(), maximumValue)
         }
     }
 
